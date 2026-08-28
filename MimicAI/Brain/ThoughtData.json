@@ -1,0 +1,23 @@
+{
+  "versao": "1.0",
+  "intents": [
+    {
+      "intent": "...",
+      "subintents": [
+        {
+          "subintent": "...",
+          "perguntas": [
+            {
+              "texto": "..."
+            }
+          ],
+          "respostas": [
+            {
+              "texto": "..."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
