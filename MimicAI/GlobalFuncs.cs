@@ -28,39 +28,62 @@ public class SubintentModel
     [JsonPropertyName("subintent")]
     public string Subintent { get; set; }
 
-    [JsonPropertyName("perguntas")]
-    public List<TextoModel> Perguntas { get; set; }
+    [JsonPropertyName("inputs")]
+    public List<TextoModel> Inputs { get; set; }
 
-    [JsonPropertyName("respostas")]
-    public List<TextoModel> Respostas { get; set; }
+    [JsonPropertyName("outputs")]
+    public List<TextoModel> Outputs { get; set; }
 }
 
 public class TextoModel
 {
-    [JsonPropertyName("texto")]
-    public string Texto { get; set; }
+    [JsonPropertyName("var")]
+    public string Vars { get; set; }
 }
 
 public class MimicFunctions
 {
-    public static void GetDataset(string FileName)
+    public static List<string> GetDataset(string Folder, string FileName)
     {
         try
         {
-            string ArcPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Brain", FileName);
+            string ArcPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Folder, FileName);
             if (File.Exists(ArcPath))
             {
                 string json = File.ReadAllText(ArcPath);
                 var Data = JsonSerializer.Deserialize<DatasetModel>(json);
 
-                Console.WriteLine(Data.Versao ?? "Versão não especificada");
+                //Console.WriteLine(Data.Versao ?? "Versão não especificada");
+                List<string> VocabList = new List<string>();
+                string Inputs = "";
+                string Outputs = "";
+
+                foreach (var intent in Data.Intents)
+                {
+                    foreach (var subintent in intent.Subintents)
+                    {
+
+                        foreach (var pergunta in subintent.Inputs)
+                        {
+                            Inputs = pergunta.Vars;
+                        }
+
+                        foreach (var resposta in subintent.Outputs)
+                        {
+                            Outputs = resposta.Vars;
+                        }
+                        VocabList.Add(Inputs + "@pros" + Outputs);
+                    }
+                }
+
+                return VocabList;
             }
             else
             {
                 throw new Exception($"Arquivo {FileName} não encontrado.");
-            }
-        }
-        catch (Exception ex)
+            }                                                              
+        }                                                                  
+        catch (Exception ex)                                               
         {
             Console.WriteLine($"Erro em inicializar o JSON {FileName}: {ex.Message}");
             throw;

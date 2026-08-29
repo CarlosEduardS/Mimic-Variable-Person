@@ -8,8 +8,17 @@
   </PropertyGroup>
 
     <ItemGroup>
+	    <None Update="Brain\FeelingsData.json">
+	      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    </None>
 	    <None Update="Brain\ThoughtData.json">
 		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    </None>
+	    <None Update="Members\ArmsData.json">
+	      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    </None>
+	    <None Update="Members\LegsData.json">
+	      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	    </None>
     </ItemGroup>
 
