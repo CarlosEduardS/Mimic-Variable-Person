@@ -24,6 +24,7 @@ MimicAI/
 │   └── LegsData.json      # Dados de movimentação
 ├──  GlobalFuncs.cs      # Utilitários globais e manipulação de datasets
 └──  Program.cs          # Ponto de entrada e inicialização do sistema
+```
 
 ## 📄 Licença
 
