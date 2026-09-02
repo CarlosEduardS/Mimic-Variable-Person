@@ -1,50 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Security;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MimicAI;
-public class DatasetModel
+internal class DatasetModel
 {
     [JsonPropertyName("versao")]
-    public string Versao { get; set; }
+    internal string Versao { get; set; }
 
     [JsonPropertyName("intents")]
-    public List<IntentModel> Intents { get; set; }
+    internal List<IntentModel> Intents { get; set; }
 }
 
-public class IntentModel
+internal class IntentModel
 {
     [JsonPropertyName("intent")]
-    public string Intent { get; set; }
+    internal string Intent { get; set; }
 
     [JsonPropertyName("subintents")]
-    public List<SubintentModel> Subintents { get; set; }
+    internal List<SubintentModel> Subintents { get; set; }
 }
 
-public class SubintentModel
+internal class SubintentModel
 {
     [JsonPropertyName("subintent")]
-    public string Subintent { get; set; }
+    internal string Subintent { get; set; }
 
     [JsonPropertyName("inputs")]
-    public List<TextoModel> Inputs { get; set; }
+    internal List<TextoModel> Inputs { get; set; }
 
     [JsonPropertyName("outputs")]
-    public List<TextoModel> Outputs { get; set; }
+    internal List<TextoModel> Outputs { get; set; }
 }
 
-public class TextoModel
+internal class TextoModel
 {
     [JsonPropertyName("var")]
-    public string Vars { get; set; }
+    internal string Vars { get; set; }
 }
 
-public static class MimicFunctions
+internal static class MimicFunctions
 {
-    public static List<string> GetDataset(string Folder, string FileName)
+    internal static List<string> GetDataset(string Folder, string FileName)
     {
         try
         {
@@ -56,8 +55,6 @@ public static class MimicFunctions
 
                 //Console.WriteLine(Data.Versao ?? "Versão não especificada");
                 List<string> VocabList = new List<string>();
-                string Inputs = "";
-                string Outputs = "";
 
                 foreach (var intent in Data.Intents)
                 {
@@ -68,18 +65,18 @@ public static class MimicFunctions
 
                         foreach (var pergunta in subintent.Inputs)
                         {
-                            if (ListInputsSelected.Contains(pergunta.Vars))
+                            if (!ListInputsSelected.Contains(pergunta.Vars))
                             {
-                                Inputs = pergunta.Vars;
+                                var Inputs = pergunta.Vars;
                                 ListInputsSelected.Add(Inputs);
                             }
                         }
 
                         foreach (var resposta in subintent.Outputs)
                         {
-                            if (ListOutputsSelected.Contains(resposta.Vars))
+                            if (!ListOutputsSelected.Contains(resposta.Vars))
                             {
-                                Outputs = resposta.Vars;
+                                var Outputs = resposta.Vars;
                                 ListOutputsSelected.Add(Outputs);
                             }
                         }
@@ -100,7 +97,7 @@ public static class MimicFunctions
             throw;
         }
     }
-    public static (int hl, int[] neo) InitHiddenLayer(this int VocabSize, double ExpRate = 0.3)
+    internal static int[] InitHiddenLayer(this int VocabSize, double ExpRate = 0.3)
     {
         int HiddenLayerSize = (int)Math.Max(Math.Round(Math.Pow(Math.Log10(VocabSize), 1.5) - 3.5), 1);
         int[] ListNeoHL = new int[HiddenLayerSize];
@@ -110,15 +107,21 @@ public static class MimicFunctions
             int NeoHL = (int)Math.Max(Math.Round(Math.Pow(Math.Log2(VocabSize), 2.2) * (1.5 + (ExpRate * i)) ), 1);
             ListNeoHL[i] = NeoHL;
         }
-        return (HiddenLayerSize, ListNeoHL);
+        return ListNeoHL;
     }
-    public static double[] InitWeights(this int size)
+    internal static (double[,], double[]) InitWeights(this int InputSize, int OutputSize)
     {
-        double[] Weights = new double[size];
-        for (int x = 0; x < size; ++x)
+        double[,] Weights = new double[InputSize, OutputSize];
+        double[] Biases = new double[OutputSize];
+        Array.Fill(Biases, 0.0);
+
+        for (int x = 0; x < InputSize; ++x)
         {
-            Weights[x] = Random.Shared.NextDouble();
+            for (int y = 0; y < OutputSize; ++y)
+            {
+                Weights[x, y] = Random.Shared.NextDouble();
+            }
         }
-        return Weights;
+        return (Weights, Biases);
     }
 }

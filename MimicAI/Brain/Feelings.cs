@@ -6,12 +6,12 @@ using System.Text.Json.Serialization;
 
 namespace MimicAI.Brain
 {
-    internal class Fellings
+    public class Fellings
     {
-        internal static void Inicialization()
+        public static void Inicialization()
         {
             Console.WriteLine("Iniciando Sentimentos...");
-            MimicFunctions.GetDataset("Brain", "ThoughtData.json");
+            MimicFunctions.GetDataset("Brain", "FeelingsData.json");
         }
     }
 }
