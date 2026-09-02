@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Security;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -41,7 +42,7 @@ public class TextoModel
     public string Vars { get; set; }
 }
 
-public class MimicFunctions
+public static class MimicFunctions
 {
     public static List<string> GetDataset(string Folder, string FileName)
     {
@@ -62,17 +63,27 @@ public class MimicFunctions
                 {
                     foreach (var subintent in intent.Subintents)
                     {
+                        List<string> ListInputsSelected = new List<string>();
+                        List<string> ListOutputsSelected = new List<string>();
 
                         foreach (var pergunta in subintent.Inputs)
                         {
-                            Inputs = pergunta.Vars;
+                            if (ListInputsSelected.Contains(pergunta.Vars))
+                            {
+                                Inputs = pergunta.Vars;
+                                ListInputsSelected.Add(Inputs);
+                            }
                         }
 
                         foreach (var resposta in subintent.Outputs)
                         {
-                            Outputs = resposta.Vars;
+                            if (ListOutputsSelected.Contains(resposta.Vars))
+                            {
+                                Outputs = resposta.Vars;
+                                ListOutputsSelected.Add(Outputs);
+                            }
                         }
-                        VocabList.Add(Inputs + "@pros" + Outputs);
+                        VocabList.Add(String.Join(" ", ListInputsSelected) + " @pros " + String.Join(" ", ListOutputsSelected));
                     }
                 }
 
@@ -88,5 +99,26 @@ public class MimicFunctions
             Console.WriteLine($"Erro em inicializar o JSON {FileName}: {ex.Message}");
             throw;
         }
+    }
+    public static (int hl, int[] neo) InitHiddenLayer(this int VocabSize, double ExpRate = 0.3)
+    {
+        int HiddenLayerSize = (int)Math.Max(Math.Round(Math.Pow(Math.Log10(VocabSize), 1.5) - 3.5), 1);
+        int[] ListNeoHL = new int[HiddenLayerSize];
+
+        for (int i = 0; i < HiddenLayerSize; ++i)
+        {
+            int NeoHL = (int)Math.Max(Math.Round(Math.Pow(Math.Log2(VocabSize), 2.2) * (1.5 + (ExpRate * i)) ), 1);
+            ListNeoHL[i] = NeoHL;
+        }
+        return (HiddenLayerSize, ListNeoHL);
+    }
+    public static double[] InitWeights(this int size)
+    {
+        double[] Weights = new double[size];
+        for (int x = 0; x < size; ++x)
+        {
+            Weights[x] = Random.Shared.NextDouble();
+        }
+        return Weights;
     }
 }
