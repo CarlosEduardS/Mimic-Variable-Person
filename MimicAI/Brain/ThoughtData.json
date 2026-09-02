@@ -5,15 +5,15 @@
       "intent": "...",
       "subintents": [
         {
-          "subintent": "...",
+          "subintent": "Feliz",
           "inputs": [
             {
-              "var": "..."
+              "var": "Feliz"
             }
           ],
           "outputs": [
             {
-              "var": "..."
+              "var": "[ 0, 0, 1, 0, 0, 0 ]"
             }
           ]
         }

@@ -5,45 +5,45 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MimicAI;
-public class DatasetModel
+internal class DatasetModel
 {
     [JsonPropertyName("versao")]
-    public string Versao { get; set; }
+    internal string Versao { get; set; }
 
     [JsonPropertyName("intents")]
-    public List<IntentModel> Intents { get; set; }
+    internal List<IntentModel> Intents { get; set; }
 }
 
-public class IntentModel
+internal class IntentModel
 {
     [JsonPropertyName("intent")]
-    public string Intent { get; set; }
+    internal string Intent { get; set; }
 
     [JsonPropertyName("subintents")]
-    public List<SubintentModel> Subintents { get; set; }
+    internal List<SubintentModel> Subintents { get; set; }
 }
 
-public class SubintentModel
+internal class SubintentModel
 {
     [JsonPropertyName("subintent")]
-    public string Subintent { get; set; }
+    internal string Subintent { get; set; }
 
     [JsonPropertyName("inputs")]
-    public List<TextoModel> Inputs { get; set; }
+    internal List<TextoModel> Inputs { get; set; }
 
     [JsonPropertyName("outputs")]
-    public List<TextoModel> Outputs { get; set; }
+    internal List<TextoModel> Outputs { get; set; }
 }
 
-public class TextoModel
+internal class TextoModel
 {
     [JsonPropertyName("var")]
-    public string Vars { get; set; }
+    internal string Vars { get; set; }
 }
 
-public class MimicFunctions
+internal static class MimicFunctions
 {
-    public static List<string> GetDataset(string Folder, string FileName)
+    internal static List<string> GetDataset(string Folder, string FileName)
     {
         try
         {
@@ -55,24 +55,32 @@ public class MimicFunctions
 
                 //Console.WriteLine(Data.Versao ?? "Versão não especificada");
                 List<string> VocabList = new List<string>();
-                string Inputs = "";
-                string Outputs = "";
 
                 foreach (var intent in Data.Intents)
                 {
                     foreach (var subintent in intent.Subintents)
                     {
+                        List<string> ListInputsSelected = new List<string>();
+                        List<string> ListOutputsSelected = new List<string>();
 
                         foreach (var pergunta in subintent.Inputs)
                         {
-                            Inputs = pergunta.Vars;
+                            if (!ListInputsSelected.Contains(pergunta.Vars))
+                            {
+                                var Inputs = pergunta.Vars;
+                                ListInputsSelected.Add(Inputs);
+                            }
                         }
 
                         foreach (var resposta in subintent.Outputs)
                         {
-                            Outputs = resposta.Vars;
+                            if (!ListOutputsSelected.Contains(resposta.Vars))
+                            {
+                                var Outputs = resposta.Vars;
+                                ListOutputsSelected.Add(Outputs);
+                            }
                         }
-                        VocabList.Add(Inputs + "@pros" + Outputs);
+                        VocabList.Add(String.Join(" ", ListInputsSelected) + " @pros " + String.Join(" ", ListOutputsSelected));
                     }
                 }
 
@@ -88,5 +96,32 @@ public class MimicFunctions
             Console.WriteLine($"Erro em inicializar o JSON {FileName}: {ex.Message}");
             throw;
         }
+    }
+    internal static int[] InitHiddenLayer(this int VocabSize, double ExpRate = 0.3)
+    {
+        int HiddenLayerSize = (int)Math.Max(Math.Round(Math.Pow(Math.Log10(VocabSize), 1.5) - 3.5), 1);
+        int[] ListNeoHL = new int[HiddenLayerSize];
+
+        for (int i = 0; i < HiddenLayerSize; ++i)
+        {
+            int NeoHL = (int)Math.Max(Math.Round(Math.Pow(Math.Log2(VocabSize), 2.2) * (1.5 + (ExpRate * i)) ), 1);
+            ListNeoHL[i] = NeoHL;
+        }
+        return ListNeoHL;
+    }
+    internal static (double[,], double[]) InitWeights(this int InputSize, int OutputSize)
+    {
+        double[,] Weights = new double[InputSize, OutputSize];
+        double[] Biases = new double[OutputSize];
+        Array.Fill(Biases, 0.0);
+
+        for (int x = 0; x < InputSize; ++x)
+        {
+            for (int y = 0; y < OutputSize; ++y)
+            {
+                Weights[x, y] = Random.Shared.NextDouble();
+            }
+        }
+        return (Weights, Biases);
     }
 }
