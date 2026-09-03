@@ -1,5 +1,5 @@
 #  Mimic-Variable-Person (M.V.P)
-> **Versão:** Beta v0.2.0  
+> **Versão:** Beta v0.2.1  
 > **Linguagem:** C# (.NET)
 
 O **Mimic-Variable-Person (MVP)** é uma arquitetura de inteligência artificial modular inspirada na dinâmica de adaptação comportamental e cognitiva. O projeto é estruturado para simular processos neurais, emocionais e físicos de um agente autônomo.
