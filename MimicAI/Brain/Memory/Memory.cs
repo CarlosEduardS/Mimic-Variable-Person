@@ -16,9 +16,9 @@ public static class Memory
     public static void Inicialization()
     {
         Console.WriteLine("Iniciando Memória...");
-        var Vocab = MimicFunctions.GetDataset("Brain/Memory", "MemoryData.json");
+        var Vocab = MimicFunctions.GetDataset("Brain\\Memory", "MemoryData.json");
 
-        string ArcPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Brain/Memory", "MemoryConsolidation.json");
+        string ArcPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Brain\\Memory", "MemoryConsolidation.json");
 
         if (File.Exists(ArcPath))
         {
@@ -29,7 +29,7 @@ public static class Memory
     {
         if (string.IsNullOrEmpty(Locate))
         {
-            Locate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Brain/Memory", "MemoryConsolidation.json");
+            Locate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Brain\\Memory", "MemoryConsolidation.json");
         }
 
         string json = File.ReadAllText(Locate);
