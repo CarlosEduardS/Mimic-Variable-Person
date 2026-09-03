@@ -10,7 +10,7 @@ namespace MimicAI.Brain
         public static void Inicialization()
         {
             Console.WriteLine("Iniciando Pensamentos...");
-            var Vocab = MimicFunctions.GetDataset("Brain/Thought", "ThoughtData.json");
+            var Vocab = MimicFunctions.GetDataset("Brain\\Thought", "ThoughtData.json");
             //Console.WriteLine(Vocab[0]);
 
             int VocabSize = 2;

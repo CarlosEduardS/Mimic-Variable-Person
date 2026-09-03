@@ -11,7 +11,7 @@ internal class DatasetModel
     internal string Versao { get; set; }
 
     [JsonPropertyName("intents")]
-    internal List<IntentModel> Intents { get; set; }
+    internal List<IntentModel> Intents { get; set; } = new List<IntentModel>();
 }
 
 internal class IntentModel
@@ -51,7 +51,8 @@ internal static class MimicFunctions
             if (File.Exists(ArcPath))
             {
                 string json = File.ReadAllText(ArcPath);
-                var Data = JsonSerializer.Deserialize<DatasetModel>(json);
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var Data = JsonSerializer.Deserialize<DatasetModel>(json, options);
 
                 //Console.WriteLine(Data.Versao ?? "Versão não especificada");
                 List<string> VocabList = new List<string>();
@@ -89,7 +90,7 @@ internal static class MimicFunctions
             else
             {
                 throw new Exception($"Arquivo {FileName} não encontrado.");
-            }                                                              
+            }
         }                                                                  
         catch (Exception ex)                                               
         {

@@ -11,7 +11,7 @@ namespace MimicAI.Brain
         public static void Inicialization()
         {
             Console.WriteLine("Iniciando Sentimentos...");
-            MimicFunctions.GetDataset("Brain/Feelings", "FeelingsData.json");
+            MimicFunctions.GetDataset("Brain\\Feelings", "FeelingsData.json");
         }
     }
 }
