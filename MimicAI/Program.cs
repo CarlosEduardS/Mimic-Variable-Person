@@ -10,6 +10,7 @@ public class Program
             Console.WriteLine("Iniciando configurações basicas...");
             Brain.Thought.Inicialization();
             Brain.Fellings.Inicialization();
+            Brain.Memory.Inicialization();
 
             Console.WriteLine("Mimic esta acordando!!!");
         }
