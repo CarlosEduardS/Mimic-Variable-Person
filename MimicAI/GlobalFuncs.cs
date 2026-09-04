@@ -91,8 +91,8 @@ internal static class MimicFunctions
             {
                 throw new Exception($"Arquivo {FileName} não encontrado.");
             }
-        }                                                                  
-        catch (Exception ex)                                               
+        }
+        catch (Exception ex)
         {
             Console.WriteLine($"Erro em inicializar o JSON {FileName}: {ex.Message}");
             throw;
@@ -105,7 +105,7 @@ internal static class MimicFunctions
 
         for (int i = 0; i < HiddenLayerSize; ++i)
         {
-            int NeoHL = (int)Math.Max(Math.Round(Math.Pow(Math.Log2(VocabSize), 2.2) * (1.5 + (ExpRate * i)) ), 1);
+            int NeoHL = (int)Math.Max(Math.Round(Math.Pow(Math.Log2(VocabSize), 2.2) * (1.5 + (ExpRate * i))), 1);
             ListNeoHL[i] = NeoHL;
         }
         return ListNeoHL;
@@ -125,4 +125,4 @@ internal static class MimicFunctions
         }
         return (Weights, Biases);
     }
-}
+}   
